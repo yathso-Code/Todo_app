@@ -12,9 +12,20 @@ connectDB();
 
 const app = express();
 
+// Allow specific origins for CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://todo-app-jeul.vercel.app'
+];
+
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true
+};
+
 const limiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 100 });
 app.use(limiter);
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
