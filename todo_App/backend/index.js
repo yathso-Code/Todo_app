@@ -21,7 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 // ✅ Test Route
 app.get('/api/test', (req, res) => {
-  res.status(200).json({ message: 'API is working ✅' });
+  res.status(200).json({ message: 'API is working ..' });
 });
 app.use(errorHandler);
 
