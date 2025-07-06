@@ -15,7 +15,7 @@ const app = express();
 // Allow specific origins for CORS
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://todo-app-jeul.vercel.app'
+  'https://todo-app-fawn-mu-20.vercel.app'
 ];
 
 const corsOptions = {
