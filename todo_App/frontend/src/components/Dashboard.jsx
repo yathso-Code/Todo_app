@@ -51,7 +51,7 @@ const Dashboard = () => {
       
       <div className="max-h-80 visible-scrollbar w-full">
          {tasks.length === 0 ? (
-    <div className="text-center py-30 text-gray-600">No tasks available</div>
+    <div className="text-center py-30 text-gray-600">No Tasks Available</div>
   ) : (
       <ul>
         {tasks.map(t => (
