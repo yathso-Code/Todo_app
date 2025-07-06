@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: "https://todo-app-amber-alpha.vercel.app/api"
+  baseURL: "https://todo-appapi.vercel.app/api"
 });
 
 API.interceptors.request.use((req) => {
