@@ -19,6 +19,10 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+// ✅ Test Route
+app.get('/api/test', (req, res) => {
+  res.status(200).json({ message: 'API is working ✅' });
+});
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
