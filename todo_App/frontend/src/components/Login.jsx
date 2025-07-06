@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import API from '../api';
 import { toast } from 'react-toastify';
+import Spinner from './Spinner';
 
 const LoginGlass = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState('');
@@ -16,6 +18,7 @@ const LoginGlass = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const res = await API.post('/auth/login', form);
       login(res.data.token);
@@ -24,6 +27,7 @@ const LoginGlass = () => {
     } catch (err) {
       setError(err?.response?.data?.message);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -84,9 +88,16 @@ const LoginGlass = () => {
 
         <button
           type="submit"
-          className="h-10 rounded-full bg-white font-bold text-black/80 transition hover:bg-white/90 cursor-pointer"
+          disabled={isLoading}
+           className={`mt-2 h-10 rounded-full flex items-center justify-center gap-2 px-4 font-bold transition ${
+    isLoading
+      ? 'bg-white/50 text-black/50 cursor-not-allowed'
+      : 'bg-white text-black/80 hover:bg-white/90'
+  }`}
         >
-          Login Now
+          
+           {isLoading && <Spinner size={16} />}
+           {isLoading ? 'Login Now...' : 'Login Now'}
         </button>
 
         <button 

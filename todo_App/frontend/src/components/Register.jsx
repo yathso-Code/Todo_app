@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import { toast } from 'react-toastify';
+import Spinner from './Spinner';
 
 const RegisterGlass = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -22,7 +24,8 @@ const RegisterGlass = () => {
     setError("Weak password! Use 8+ chars with A-Z, a-z, 0-9 & symbol.");
     return;
   }
-
+ 
+    setIsLoading(true);
     try {
       await API.post('/auth/register', form);
       toast("Account is created! ")
@@ -30,6 +33,7 @@ const RegisterGlass = () => {
     } catch (err) {
       setError(err?.response?.data?.message);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -87,8 +91,8 @@ const RegisterGlass = () => {
     onChange={handleChange}
     placeholder="Create a password"
     required
-    className="h-10 w-full rounded-md bg-white/10 px-3 pr-10 text-white placeholder:text-white/80 transition hover:bg-white/15 focus:outline-none"
-  />
+    className="h-10 w-full rounded-md bg-white/10 px-3 pr-10 text-white placeholder:text-white/80 transition hover:bg-white/15 focus:outline-none"/>
+    
   <button
     type="button"
     onClick={() => setShowPassword(!showPassword)}
@@ -101,11 +105,17 @@ const RegisterGlass = () => {
         {error && <p className="mb-2 text-sm text-red-400">{error}</p>}
 
         <button
-          type="submit"
-          className="mt-2 h-10 rounded-full bg-white font-bold text-black/80 transition hover:bg-white/90 cursor-pointer"
-        >
-          Register Now
-        </button>
+  type="submit"
+  disabled={isLoading}
+  className={`mt-2 h-10 rounded-full flex items-center justify-center gap-2 px-4 font-bold transition ${
+    isLoading
+      ? 'bg-white/50 text-black/50 cursor-not-allowed'
+      : 'bg-white text-black/80 hover:bg-white/90'
+  }`}
+>
+  {isLoading && <Spinner size={16} />}
+  {isLoading ? 'Registering...' : 'Register Now'}
+</button>
 
         <button 
         onClick={() => navigate('/login')}

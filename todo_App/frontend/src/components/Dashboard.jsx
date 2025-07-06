@@ -13,6 +13,7 @@ const Dashboard = () => {
   const { logout } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
   const [editing, setEditing] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const fetchTasks = async () => {
@@ -21,8 +22,10 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id) => {
+    setIsLoading(true);
     await API.delete(`/tasks/${id}`);
     fetchTasks();
+    setIsLoading(false);
   };
 
   useEffect(() => { fetchTasks(); }, []);
@@ -55,8 +58,10 @@ const Dashboard = () => {
           <li className="flex justify-between text-1xl capitalize  dark:bg-gray-800 px-1 py-1 my-1 rounded-lg " key={t._id}>
             {t.title} 
             <div >
-            <button className='mx-2' onClick={() => setEditing(t)}><FaEdit /></button>
-            <button className='mx-2' onClick={() => handleDelete(t._id)}> <FaTrash /></button>
+            <button className='mx-2' disabled={isLoading} onClick={() => setEditing(t)}><FaEdit /></button>
+            <button className={`mx-2 transition-colors duration-200 ${
+             isLoading ? 'text-gray-500 cursor-not-allowed' : 'text-white hover:text-red-400'
+            }`}  disabled={isLoading} onClick={() => handleDelete(t._id)}> <FaTrash  /></button>
             </div>
             
           </li>
