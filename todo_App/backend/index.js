@@ -34,7 +34,7 @@ app.use('/api/tasks', taskRoutes);
 app.get('/api/test', (req, res) => {
   res.status(200).json({ message: 'API is working ..' });
 });
-app.use(errorHandler);
+app.use(errorHandler);git
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`< ======== Server running on port ${PORT} +===============>`));
