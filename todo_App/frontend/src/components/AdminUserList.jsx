@@ -9,8 +9,9 @@ const AdminUserList = () => {
   const { sidebarOpen, setSidebarOpen } = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(null);
   const [pages, setPages] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const page = Number(searchParams.get('page')) || 1;
   const search = searchParams.get('search') || '';
@@ -43,12 +44,14 @@ const AdminUserList = () => {
 
 
   const handleBlockToggle = async (userId, isBlocked) => {
+    setLoading(true);
     try {
       await API.put(`/admin/block/${userId}`, { block: !isBlocked });
       fetchUsers();
     } catch (err) {
       console.error('Failed to update block status');
     }
+    setLoading(false);
   };
 
   const handlePageChange = (newPage) => {
@@ -57,6 +60,8 @@ const AdminUserList = () => {
     if (newPage > 1) params.page = newPage;
     setSearchParams(params);
   };
+
+   
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white w-full">
@@ -76,7 +81,10 @@ const AdminUserList = () => {
           />
         </header>
 
-        <main className="p-4 overflow-x-auto">
+        {
+          !users  ? <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-white">
+                     <p className="text-xl">Loading...</p>
+                </div> : <main className="p-4 overflow-x-auto">
           <table className="min-w-full text-sm bg-white dark:bg-gray-800 rounded shadow">
             <thead>
               <tr className="bg-gray-200 dark:bg-gray-700">
@@ -88,7 +96,7 @@ const AdminUserList = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              { users.map((user) => (
                 <tr key={user._id} className="border-t border-gray-300 dark:border-gray-700">
                   <td className="px-4 py-2 capitalize">{user.name}</td>
                   <td className="px-4 py-2">{user.email}</td>
@@ -102,12 +110,17 @@ const AdminUserList = () => {
                   </td>
                   <td className="px-4 py-2 text-center">
                     <button
+                      disabled={ user.role === "admin" ? true : loading}
                       className={`px-3 py-1 rounded text-white text-xs ${
                         user.isBlocked ? 'bg-green-500' : 'bg-red-500'
-                      }`}
+                      }${ user.role === "admin" ? 'opacity-50 cursor-not-allowed bg-gray-600' : loading ? 'opacity-50 cursor-not-allowed bg-gray-600' : ''}`}
                       onClick={() => handleBlockToggle(user._id, user.isBlocked)}
                     >
-                      {user.isBlocked ? 'Unblock' : 'Block'}
+                      {loading
+                           ? 'Processing...'
+                           : user.isBlocked
+                           ? 'Unblock'
+                           : 'Block'}
                     </button>
                   </td>
                 </tr>
@@ -132,6 +145,9 @@ const AdminUserList = () => {
             ))}
           </div>
         </main>
+        }
+
+        
       </div>
     </div>
   );
