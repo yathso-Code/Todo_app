@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { errorHandler } = require('./middlewares/errorHandler');
 const rateLimit = require('express-rate-limit');
 
@@ -12,7 +13,6 @@ connectDB();
 
 const app = express();
 
-// Allow specific origins for CORS
 const allowedOrigins = [
   'http://localhost:5173',
   'https://todo-app-fawn-mu-20.vercel.app'
@@ -30,10 +30,16 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+// ADMIN -=======
+app.use('/api/admin', adminRoutes);
+
+
 // ✅ Test Route
 app.get('/api/test', (req, res) => {
   res.status(200).json({ message: 'API is working ..' });
 });
+
+
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

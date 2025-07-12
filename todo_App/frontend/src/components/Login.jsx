@@ -21,7 +21,7 @@ const LoginGlass = () => {
     setIsLoading(true);
     try {
       const res = await API.post('/auth/login', form);
-      login(res.data.token);
+      login({ token: res.data.token, userRole: res.data.role });
       toast("You are login ! ")
       navigate('/dashboard'); 
     } catch (err) {
