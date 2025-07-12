@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import { toast } from 'react-toastify';
 import Spinner from './Spinner';
+import { isStrongPassword } from '../utils/helper';
 
 const RegisterGlass = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -11,11 +12,7 @@ const RegisterGlass = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-    const isStrongPassword = (password) => 
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&]).{8,}$/.test(password);
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
